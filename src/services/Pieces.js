@@ -6,7 +6,6 @@ import WP from "../assets/wp.png"
 import WK from "../assets/wk.png"
 import WN from "../assets/wn.png"
 import WB from "../assets/wb.png"
-import Piece from '../components/Pieces/Pieces';
 
 const Pieces = [];
 

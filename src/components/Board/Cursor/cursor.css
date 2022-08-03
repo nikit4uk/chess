@@ -1,0 +1,10 @@
+.cursor{
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: 2px solid #6367e7a6;
+    background-color: #6367e73b;
+
+}

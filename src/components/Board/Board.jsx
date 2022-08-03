@@ -50,14 +50,61 @@ import WP from "../../assets/wp.png"
 import WK from "../../assets/wk.png"
 import WN from "../../assets/wn.png"
 import WB from "../../assets/wb.png"
+import Cursor from "./Cursor/Cursor";
 
 const verticalAxis = ["1", "2", "3", "4", "5",]
 const horisontalAxis = ["a", "b", "c", "d", "e",]
 
 export default class Board extends Component {
-    render() {
-        
+    constructor(props){
+        super(props);
+        this.state = {
+            CursorX: 0,
+            CursorY: 0
+        }
+        this.keyFunction = this.keyFunction.bind(this);
+    }
 
+    keyFunction(event){
+        if(event.keyCode === 0x0D) {
+            console.log('Enter')
+        }
+        if(event.keyCode === 0x25) {
+            this.setState((state) => {
+                console.log(`CursorX: ${this.state.CursorX}`)
+                return {counter: state.CursorX++};
+              });
+            console.log('Left')
+            console.log(`CursorX: ${this.state.CursorX}`)
+        }
+        if(event.keyCode === 0x27) {
+            this.setState((state) => {
+                return {counter: state.CursorX--};
+              });
+            console.log('Right')
+            console.log(`CursorX: ${this.state.CursorX}`)
+        }
+        if(event.keyCode === 0x26) {
+            this.setState((state) => {
+                return {counter: state.CursorY++};
+              });
+            console.log('Up')
+            console.log(`CursorY: ${this.state.CursorY}`)
+        }
+        if(event.keyCode === 0x28) {
+            this.setState((state) => {
+                return {counter: state.CursorY--};
+              });
+            console.log('Down')
+            console.log(`CursorY: ${this.state.CursorY}`)
+        }
+    }
+
+    componentDidMount(){
+        document.addEventListener("keydown", this.keyFunction);
+    }
+
+    render() {
         let board = [];
 
         for(let i = verticalAxis.length - 1; i >= 0; i--){
@@ -65,6 +112,7 @@ export default class Board extends Component {
                 const number = i + j + 2;
                 let image = undefined
                 let alt = undefined
+                let tileID = `${i} + ${j}`;
 
                 Pieces.forEach(p => {
                     if(p.x === j && p.y === i) {
@@ -74,7 +122,15 @@ export default class Board extends Component {
                 })
 
                 board.push(
-                    <Tile image={image} alt={alt} number={number} key={`${i} + ${j}`} />
+                    <Tile 
+                        image={image}
+                        alt={alt}
+                        number={number}
+                        id={tileID}
+                        CursorX={this.state.CursorX}
+                        CursorY={this.state.CursorY} 
+                        key={`${i} + ${j}`} 
+                    />
                 )
             }
         }
