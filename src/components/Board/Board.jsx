@@ -1,43 +1,3 @@
-// import React, {Component} from "react";
-// import "./board.css";
-// import Tile from "./Tile/Tile";
-// import pieces from "../../services/Pieces"
-
-
-// const verticalAxis = ["1", "2", "3", "4", "5",]
-// const horisontalAxis = ["a", "b", "c", "d", "e",]
-
-// export default class Board extends Component {
-//     render() {
-//         console.log(pieces)
-
-//         let board = [];
-
-//         for(let i = verticalAxis.length - 1; i >= 0; i--){
-//             for(let j = horisontalAxis.length - 1; j >= 0; j--){
-//                 const number = i + j + 2;
-//                 let image = undefined
-
-//                 console.log(`${j} + ${i}`);
-
-//                 pieces.forEach(p => {
-//                     console.log(p);
-//                     if(j === 0 && i === 2) {
-//                         image = p.icon
-//                     }
-//                 })
-
-//                 board.push(
-//                     <Tile image={image} number={number} id={`tile-${i}-${j}`} key={`${i} + ${j}`}/>
-//                 )
-//             }
-//         }
-//         return (
-//             <div className='board'>{board}</div>
-//         );
-//     }
-// }
-
 import React, {Component} from "react";
 import "./board.css";
 import Tile from "./Tile/Tile";
@@ -66,37 +26,68 @@ export default class Board extends Component {
     }
 
     keyFunction(event){
+        if(event.keyCode === 0x25) { // LeftArrow Key 
+            if(this.state.CursorX < 4){
+                this.setState((state) => {
+                    return {counter: state.CursorX++};
+                });
+            }
+            else {
+                this.setState((state) => {
+                    return {counter: state.CursorX};
+                });
+            }
+        }
+        if(event.keyCode === 0x27) { // RightArrow Key 
+            if(this.state.CursorX > 0){
+                this.setState((state) => {
+                    return {counter: state.CursorX--};
+                });
+            } else {
+                this.setState((state) => {
+                    return {counter: state.CursorX};
+                });
+            }
+        }
+        if(event.keyCode === 0x26) { // UpArrow Key 
+            if(this.state.CursorY < 4){
+                this.setState((state) => {
+                    return {counter: state.CursorY++};
+                });
+            } else {
+                this.setState((state) => {
+                    return {counter: state.CursorY};
+                });
+            }
+        }
+        if(event.keyCode === 0x28) { // DownArrow Key
+            if(this.state.CursorY > 0){
+                this.setState((state) => {
+                    return {counter: state.CursorY--};
+                });
+            } else {
+                this.setState((state) => {
+                    return {counter: state.CursorY};
+                });
+            }
+        }
         if(event.keyCode === 0x0D) {
-            console.log('Enter')
-        }
-        if(event.keyCode === 0x25) {
-            this.setState((state) => {
-                console.log(`CursorX: ${this.state.CursorX}`)
-                return {counter: state.CursorX++};
-              });
-            console.log('Left')
-            console.log(`CursorX: ${this.state.CursorX}`)
-        }
-        if(event.keyCode === 0x27) {
-            this.setState((state) => {
-                return {counter: state.CursorX--};
-              });
-            console.log('Right')
-            console.log(`CursorX: ${this.state.CursorX}`)
-        }
-        if(event.keyCode === 0x26) {
-            this.setState((state) => {
-                return {counter: state.CursorY++};
-              });
-            console.log('Up')
-            console.log(`CursorY: ${this.state.CursorY}`)
-        }
-        if(event.keyCode === 0x28) {
-            this.setState((state) => {
-                return {counter: state.CursorY--};
-              });
-            console.log('Down')
-            console.log(`CursorY: ${this.state.CursorY}`)
+            const currentTile = document.querySelector('.cursor').parentElement;
+            const tileImg = currentTile.querySelector('img');
+            console.log(`Enter to ${tileImg.alt}`)
+
+            if(tileImg.alt == 'wPawn'){
+                this.setState((state) => {
+                    console.log(`wPawn move to 1 tile up`)
+
+                    Pieces.forEach(p => {
+                        if(p.x === this.state.CursorX && p.y === this.state.CursorY) {
+                            p.y++
+                        }
+                    })
+                    return {counter: state};
+                });
+            }
         }
     }
 
