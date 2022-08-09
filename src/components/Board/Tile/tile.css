@@ -18,3 +18,7 @@
     width: 80px;
     pointer-events: none;
 }
+
+.tile img.moveAtack{
+    position: absolute;
+}
