@@ -2,15 +2,6 @@ import React, {Component} from "react";
 import "./board.css";
 import Tile from "./Tile/Tile";
 import Pieces from "../../services/Pieces";
-import BP from "../../assets/bp.png";
-import BK from "../../assets/bk.png";
-import BN from "../../assets/bn.png";
-import BB from "../../assets/bb.png";
-import WP from "../../assets/wp.png";
-import WK from "../../assets/wk.png";
-import WN from "../../assets/wn.png";
-import WB from "../../assets/wb.png";
-import Cursor from "./Cursor/Cursor";
 import { wPawnMovement, bPawnMovement, pieceNewPosition} from "../../services/PieceMovement";
 
 const verticalAxis = ["1", "2", "3", "4", "5",]
@@ -75,26 +66,52 @@ export default class Board extends Component {
         if(event.keyCode === 0x0D) { //Enter Key
             const currentTile = document.querySelector('.cursor').parentElement;
             const tileImg = currentTile.querySelector('img');
+            console.log(Pieces)
 
-            if(tileImg.alt == 'wPawn'){
+            if(tileImg.alt === "availableMove"){
+                this.setState((state) => {
+                    pieceNewPosition(this.state.CursorX, this.state.CursorY);
+                    return {state};
+                });
+            }
+
+            if(tileImg.alt === "moveAtack"){
+                this.setState((state) => {
+                    pieceNewPosition(this.state.CursorX, this.state.CursorY);
+                    return {state};
+                });
+            }
+
+            if(tileImg.alt === 'wPawn'){
                 this.setState((state) => {
                     wPawnMovement(this.state.CursorX, this.state.CursorY);
                     return {state};
                 });
             }
 
-            if(tileImg.alt == 'bPawn'){
+            if(tileImg.alt === 'bPawn'){
                 this.setState((state) => {
                     bPawnMovement(this.state.CursorX, this.state.CursorY);
                     return {state};
                 });
             }
         }
+        if(event.keyCode === 0x1B) { //ESC Key
+            this.setState((state) => {
+                console.log(Pieces)
+                Pieces.forEach((p, index) => { // New position
+                    p.active = false;
+                    if(p.icon2){
+                        Pieces.splice(index, 50);
+                    }
+                });
+                return {state};
+            });
+        }
     }
 
     componentDidMount(){
         document.addEventListener("keydown", this.keyFunction);
-        document.addEventListener("keydown", pieceNewPosition);
     }
 
     render() {

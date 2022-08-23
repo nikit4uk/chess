@@ -1,13 +1,14 @@
 import Pieces from "./Pieces";
-import Tile from "../components/Board/Tile/Tile"
-import Board from "../components/Board/Board";
-import availableMove from "../assets/move.png"
-import moveAtack from "../assets/moveAtack.png"
+import availableMove from "../assets/move.png";
+import moveAtack from "../assets/moveAtack.png";
 
 function pieceAvailableMove(availableMoveX, availableMoveY) {
     const tileHasPiece = Pieces.some(p => p.x === availableMoveX && p.y === availableMoveY);
     if(!tileHasPiece) {
-        Pieces.push({name: 'availableMove', x: availableMoveX, y: availableMoveY, icon2: availableMove});                
+        Pieces.push({name: 'availableMove', x: availableMoveX, y: availableMoveY, icon2: availableMove});
+        return true;              
+    } else {
+        return false;
     }
 }
 
@@ -19,29 +20,31 @@ function pieceAvailableAtack(availableAtackX, availableAtackY) {
             if(p.x === availableAtackX && p.y === availableAtackY) {
                 image = p.icon
             }
-        })
+        });
         Pieces.push({name: 'moveAtack', x: availableAtackX, y: availableAtackY, icon: image, icon2: moveAtack});                
     }
 }
 
-function pieceNewPosition(e, i, j){
-    // const currentTile = document.querySelector('.cursor').parentElement;
-    // const tileImg = currentTile.querySelector('img');
+function pieceNewPosition(newPositionX, newPositionY){
+    Pieces.splice(20); // Remove image move
 
-    // if(tileImg.alt == 'availableMove'){
-    //     console.log(e, i, j)
-    //     const startPieceX = i;
-    //     const startPieceY = j;
-    //     if(e.keyCode === 0x0D) {
-    //         Pieces.forEach(p => {
-    //             if(p.x === startPieceX && p.y === startPieceY) {
-    //                 startPieceX++
-    //             }
-    //         })
-    //     }
-    // }
-    console.log(i, j )
-    j++
+    Pieces.forEach((p, index) => { // Remove atack piece
+        if(p.x === newPositionX && p.y === newPositionY){
+            delete Pieces[index];
+        }
+    });
+
+    Pieces.forEach(p => { // New position
+        if(p.active === true){
+            p.x = newPositionX;
+            p.y = newPositionY;
+
+            Pieces.slice(p);
+            Pieces.push(p);
+        }
+        
+        p.active = false;
+    });
 }
 
 function wPawnMovement(x, y) {
@@ -52,18 +55,22 @@ function wPawnMovement(x, y) {
     let availableMoveAtackCursorX1 = x - 1;
     let availableMoveAtackCursorX2 = x + 1;
     let availableMoveAtackCursorY = y + 1;
-    
+
+    Pieces.splice(20);
     
     Pieces.forEach(p => {
+        p.active = false;
         if(p.x === x && p.y === y) {
+            p.active = true;
             pieceAvailableMove(availableMoveCursorX, availableMoveCursorY1);
-            pieceAvailableMove(availableMoveCursorX, availableMoveCursorY2);
+            if(p.movementCount === 0){
+                if(pieceAvailableMove(availableMoveCursorX, availableMoveCursorY1) === true){
+                    console.log(pieceAvailableMove(availableMoveCursorX, availableMoveCursorY1))
+                    pieceAvailableMove(availableMoveCursorX, availableMoveCursorY2);
+                }
+            }
             pieceAvailableAtack(availableMoveAtackCursorX1, availableMoveAtackCursorY);
             pieceAvailableAtack(availableMoveAtackCursorX2, availableMoveAtackCursorY);
-            let startPieceX = p.x;
-            let startPieceY = p.y;
-            pieceNewPosition("keydown", startPieceX, startPieceY);
-
         }
     })
 }
